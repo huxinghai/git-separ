@@ -1,0 +1,28 @@
+{
+  "name": "ember_git_separ",
+  "version": "1.0.0",
+  "description": "ember cli build输出发布文件，单独存储git分支",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/huxinghai1988/git-separate.git"
+  },
+  "keywords": [
+    "branch",
+    "separate",
+    "store"
+  ],
+  "author": "kaka",
+  "license": "ISC",
+  "bugs": {
+    "url": "htt:ps://github.com/huxinghai1988/git-separate/issues"
+  },
+  "homepage": "https://github.com/huxinghai1988/git-separate#readme",
+  "dependencies": {
+    "commander": "2.9.0",
+    "prompt": "*"
+  }
+}
