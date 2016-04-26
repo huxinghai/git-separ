@@ -23,6 +23,7 @@
   "homepage": "https://github.com/huxinghai1988/git-separate#readme",
   "dependencies": {
     "commander": "2.9.0",
-    "prompt": "*"
+    "prompt": "1.0.0",
+    "simple-git": "1.32.1"
   }
 }

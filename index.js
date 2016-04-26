@@ -1,6 +1,6 @@
 var command = require('commander'),
   prompt = require('prompt'),
-  fs = require('fs');
+  task = require('./task');
 
 process.title = "ember_separ"
 
@@ -35,38 +35,10 @@ if(command.setup){
     task.setup(result.branch, result.repository_url)
   });
 }else if(command.push){
-  if(command.commit || command.tag || 
-    typeof command.commit == "boolean" || typeof command.tag == "boolean"){
+  if(command.commit && command.tag &&
+    typeof command.commit == "boolean" != typeof command.tag != "boolean"){
+    task.push(command.commit, command.tag)  
+  }else{
     console.error("error: must input commit and tag argument!")
-    return 
-  }
-  task.push(command.commit, command.tag)
-}
-
-var _task = function(){
-  this.basedir = process.cwd();
-  this.configPath = this.basedir + "/ember_git_separ";
-}
-
-_task.prototype = {
-  setup: function(branch, repository_url){
-    var content = "branch: "+ branch +"\r\nrepository_url: "+ repository_url +"\r\noutput_dir: dist";
-  
-    fs.unlinkSync(this.configPath)
-    if(fs.appendFileSync(this.configPath, content)){
-      console.log("setup successful! ")
-    }
-  },
-  push: function(commit, tag){
-    if(!this.validConfig()){
-      console.log("please run setup command!")
-      return
-    } 
-    
-  },
-  validConfig: function(){
-    return fs.existsSync(this.configPath)
   }
 }
-
-var task = new _task()
