@@ -1,4 +1,5 @@
 var command = require('commander'),
+  core = require("./extend_core"),
   prompt = require('prompt'),
   task = require('./task');
 
@@ -24,6 +25,10 @@ if(command.setup){
       repository_url: {
         message: "git ssh url",
         required: true
+      },
+      output_dir:  {
+        message: "ember build output",
+        default: "dist"
       }
     }
   }
@@ -32,7 +37,7 @@ if(command.setup){
     if (err) { 
       return console.log(err); 
     }
-    task.setup(result.branch, result.repository_url)
+    task.setup(result.branch, result.repository_url, result.output_dir)
   });
 }else if(command.push){
   if(command.commit && command.tag &&
