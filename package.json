@@ -2,7 +2,10 @@
   "name": "ember_git_separ",
   "version": "1.0.0",
   "description": "ember cli build输出发布文件，单独存储git分支",
-  "main": "index.js",
+  "main": "",
+  "bin": {
+    "gsp": "./bin/gsp"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

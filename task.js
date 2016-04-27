@@ -5,6 +5,7 @@ var fs = require('fs'),
 var task = function(){
   this.basedir = process.cwd();
   this.configPath = this.basedir + "/git_separ";
+  this.gitignorePath = this.basedir + "/.gitignore"
   this._config = {};
   this.git = null
 }
@@ -14,7 +15,11 @@ task.prototype = {
     if(this.validConfig())
       fs.unlinkSync(this.configPath)
 
+    if(fs.existsSync(this.gitignorePath))
+      fs.appendFileSync(this.gitignorePath, data.branch)      
+
     if(fs.appendFileSync(this.configPath, this.renderTemplate(data))){
+      console.log("create config path "+ this.configPath);
       console.log("setup successful! ")
     }
   },

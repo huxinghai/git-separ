@@ -1,7 +1,7 @@
 var command = require('commander'),
-  core = require("./extend_core"),
+  core = require("../extend_core"),
   prompt = require('prompt'),
-  task = require('./task');
+  task = require('../task');
 
 process.title = "ember_separ"
 
