@@ -16,7 +16,7 @@ task.prototype = {
       fs.unlinkSync(this.configPath)
 
     if(fs.existsSync(this.gitignorePath))
-      fs.appendFileSync(this.gitignorePath, data.branch)      
+      fs.appendFileSync(this.gitignorePath, "\r\n"+ data.branch)      
 
     if(fs.appendFileSync(this.configPath, this.renderTemplate(data))){
       console.log("create config path "+ this.configPath);
