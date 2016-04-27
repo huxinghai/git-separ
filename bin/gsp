@@ -1,9 +1,11 @@
+#!/usr/bin/env node
+
 var command = require('commander'),
   core = require("../extend_core"),
   prompt = require('prompt'),
   task = require('../task');
 
-process.title = "ember_separ"
+process.title = "git_separ"
 
 command
   .version('0.0.1')
