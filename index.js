@@ -27,17 +27,26 @@ if(command.setup){
         required: true
       },
       output_dir:  {
-        message: "ember build output",
+        message: "ember build output path",
         default: "dist"
+      },
+      tag_prefix: {
+        message: "production environment tag prefix",
+        default: "prod"
       }
     }
   }
 
   prompt.get(schema, function (err, result) {
-    if (err) { 
+    if(err) { 
       return console.log(err); 
     }
-    task.setup(result.branch, result.repository_url, result.output_dir)
+    task.setup({
+      branch: result.branch, 
+      repository_url: result.repository_url, 
+      output_dir: result.output_dir, 
+      tag_prefix: result.tag_prefix
+    })
   });
 }else if(command.push){
   if(command.commit && command.tag &&
