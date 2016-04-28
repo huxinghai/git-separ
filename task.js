@@ -79,7 +79,18 @@ task.prototype = {
         return
       }
       var obj = git.init().checkoutLocalBranch(config.branch).add("./*").commit(commit).addRemote(remote_name, config.repository_url)
-      obj.pull(remote_name, config.branch).addTag(self.tagName(tag)).push(remote_name, config.branch).pushTags(remote_name)
+
+      obj.listRemote(['--heads'], function(err, heads){
+        if(err){
+          console.log("error: ", err)
+          return 
+        } 
+        if(~heads.indexOf("refs/heads/"+ config.branch)){
+          obj.pull(remote_name, config.branch).push(remote_name, config.branch).addTag(self.tagName(tag)).pushTags(remote_name)
+        }else{
+          obj.push(remote_name, config.branch).addTag(self.tagName(tag)).pushTags(remote_name)
+        }
+      })
     })
   },
   tagName: function(tag){
