@@ -1,5 +1,6 @@
 var fs = require('fs'),
   fse = require("fs.extra"),
+  chalk = require('chalk'),
   simpleGit = require('simple-git');
 
 var task = function(){
@@ -20,7 +21,7 @@ task.prototype = {
 
     if(fs.appendFileSync(this.configPath, this.renderTemplate(data))){
       console.log("create config path "+ this.configPath);
-      console.log("setup successful! ")
+      console.log(chalk.green("setup successful! "));
     }
   },
   push: function(commit, tag){
@@ -31,14 +32,14 @@ task.prototype = {
 
     fs.mkdirSync(this.branchPath());
     this.gitCommit(commit, tag);
-    console.log("assets push "+ config.repository_url +" branch "+ config.branch)
+    console.log(chalk.green("assets push "+ config.repository_url +" branch "+ config.branch))
   },
   validConfig: function(){
     return fs.existsSync(this.configPath)
   },
   readConfig: function(){
     if(!this.validConfig()){
-      console.log("please run setup command!")
+      console.log(chalk.red("Please run setup command!"))
       return
     }
     if(this.isEmptyObject(this._config)){
