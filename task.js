@@ -1,5 +1,5 @@
 var fs = require('fs'),
-  fse = require("fs.extra"),
+  fse = require("fs-extra"),
   chalk = require('chalk'),
   simpleGit = require('simple-git');
 
@@ -26,7 +26,7 @@ task.prototype = {
   },
   push: function(commit, tag){
     if(fs.existsSync(this.branchPath())){
-      fse.rmrfSync(this.branchPath())
+      fse.removeSync(this.branchPath())
     }
     var config = this.readConfig();
 
@@ -74,25 +74,30 @@ task.prototype = {
       remote_name = 'origin',
       git = this.createGitInstance();
 
-    fse.copyRecursive(this.outputDir(), this.branchPath(), function(err){
+
+    var obj = git.init().checkoutLocalBranch(config.branch).addRemote(remote_name, config.repository_url)
+
+    obj.listRemote(['--heads'], function(err, heads){
       if(err){
         console.log("error: ", err)
-        return
-      }
-      var obj = git.init().checkoutLocalBranch(config.branch).add("./*").commit(commit).addRemote(remote_name, config.repository_url)
+        return 
+      } 
 
-      obj.listRemote(['--heads'], function(err, heads){
-        if(err){
-          console.log("error: ", err)
-          return 
-        } 
-        if(~heads.indexOf("refs/heads/"+ config.branch)){
-          obj.pull(remote_name, config.branch).push(remote_name, config.branch).addTag(self.tagName(tag)).pushTags(remote_name)
-        }else{
-          obj.push(remote_name, config.branch).addTag(self.tagName(tag)).pushTags(remote_name)
-        }
-      })
+      var copySuccessful = function(){
+        self.copyToDeploy(function(){
+          obj.add("./*").commit(commit).push(remote_name, config.branch).addTag(self.tagName(tag)).pushTags(remote_name)
+        })
+      }
+
+      if(~heads.indexOf("refs/heads/"+ config.branch)){
+        obj.pull(remote_name, config.branch, function(){
+          copySuccessful()
+        }) 
+      }else{
+        copySuccessful()
+      }
     })
+    
   },
   tagName: function(tag){
     var c = this.readConfig()
@@ -104,6 +109,15 @@ task.prototype = {
       content += k + ": "+ res[k] + "\r\n"
     }
     return content
+  },
+  copyToDeploy: function(callback){
+    fse.copy(this.outputDir(), this.branchPath(), function(err){
+      if(err){
+        console.log("error: ", err)
+        return
+      }
+      callback && callback()
+    })
   }
 }
 
