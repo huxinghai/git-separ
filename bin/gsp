@@ -17,11 +17,13 @@ command
   .parse(process.argv);
 
 
-var task;
-command.setup && (task = 1) || command.push && (task = 2) || command.tags && (task = 3)
+var command_number;
+command.setup && (command_number = 1) || 
+command.push && (command_number = 2) || 
+command.tags && (command_number = 3)
 
 
-switch(task){
+switch(command_number){
   case 1:
     prompt.start();
     var schema = {
@@ -66,6 +68,6 @@ switch(task){
     }
     break;
   case 3:
-
+    task.tags()
     break;
 }

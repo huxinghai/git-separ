@@ -85,7 +85,7 @@ task.prototype = {
 
       var copySuccessful = function(){
         self.copyToDeploy(function(){
-          obj.add("./*").commit(commit).push(self.remote_name, config.branch).addTag(self.tagName(tag)).pushTags(remote_name)
+          obj.add("./*").commit(commit).push(self.remote_name, config.branch).addTag(self.tagName(tag)).pushTags(self.remote_name)
         })
       }
 
@@ -126,7 +126,11 @@ task.prototype = {
     var git = this.createGitInstance(),
       config = this.readConfig();
 
-    git.pull(this.remote_name, config.branch).
+    git.fetch(this.remote_name).pull(this.remote_name, config.branch).tags(function(err, tags){
+      tags.all.forEach(function(tag){
+        console.log(chalk.green(tag))  
+      })
+    })  
   }
 }
 

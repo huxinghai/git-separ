@@ -16,3 +16,8 @@ ember-cli编译的静态文件独立分支打包存储工具
 
 
     $ gsp push -m "test gsp" -t 0.0.1
+
+    $ gsp tags
+    dev.0.0.1
+    prod.0.0.1
+    prod.0.0.2
