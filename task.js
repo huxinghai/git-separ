@@ -7,6 +7,7 @@ var task = function(){
   this.basedir = process.cwd();
   this.configPath = this.basedir + "/git_separ";
   this.gitignorePath = this.basedir + "/.gitignore"
+  this.remote_name = 'origin'
   this._config = {};
   this.git = null
 }
@@ -71,11 +72,10 @@ task.prototype = {
   gitCommit: function(commit, tag){
     var self = this,
       config = this.readConfig(),
-      remote_name = 'origin',
       git = this.createGitInstance();
 
 
-    var obj = git.init().checkoutLocalBranch(config.branch).addRemote(remote_name, config.repository_url)
+    var obj = git.init().checkoutLocalBranch(config.branch).addRemote(this.remote_name, config.repository_url)
 
     obj.listRemote(['--heads'], function(err, heads){
       if(err){
@@ -85,12 +85,12 @@ task.prototype = {
 
       var copySuccessful = function(){
         self.copyToDeploy(function(){
-          obj.add("./*").commit(commit).push(remote_name, config.branch).addTag(self.tagName(tag)).pushTags(remote_name)
+          obj.add("./*").commit(commit).push(self.remote_name, config.branch).addTag(self.tagName(tag)).pushTags(remote_name)
         })
       }
 
       if(~heads.indexOf("refs/heads/"+ config.branch)){
-        obj.pull(remote_name, config.branch, function(){
+        obj.pull(self.remote_name, config.branch, function(){
           copySuccessful()
         }) 
       }else{
@@ -101,6 +101,9 @@ task.prototype = {
   },
   tagName: function(tag){
     var c = this.readConfig()
+    if(/^(test\.|dev\.|prod\.)/.test(tag))
+      return tag
+
     return c.tag_prefix + "."+ tag
   },
   renderTemplate: function(res){
@@ -118,6 +121,12 @@ task.prototype = {
       }
       callback && callback()
     })
+  },
+  tags: function(){
+    var git = this.createGitInstance(),
+      config = this.readConfig();
+
+    git.pull(this.remote_name, config.branch).
   }
 }
 

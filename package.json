@@ -1,6 +1,6 @@
 {
   "name": "git_separ",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "ember cli build输出发布文件，单独存储git分支",
   "main": "",
   "bin": {
